@@ -36,7 +36,7 @@ jobs:
 
       - name: Build Project
         run: npm run build
-    
+
       - name: Setup Pages
         uses: actions/configure-pages@v4
 
@@ -49,6 +49,6 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-    # This step will output the URL where your site has been deployed
-    - name: Check deployment URL
-      run: echo "Deployed to ${{ steps.deployment.outputs.page_url }}"
+      # This step will output the URL where your site has been deployed
+      - name: Check deployment URL
+        run: echo "Deployed to ${{ steps.deployment.outputs.page_url }}"
