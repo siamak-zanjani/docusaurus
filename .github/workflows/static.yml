@@ -36,9 +36,13 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
+        working-directory: ./data # Ensure this is the correct path to your project's root with package.json
+
 
       - name: Build Project
         run: npm run build
+        working-directory: ./data # Ensure this is the correct path to your project's root with package.json
+
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
