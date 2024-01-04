@@ -32,8 +32,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Navigate To data Folder
-        run: cd data/my-website/
-        run: ls
+        run: cd data/my-website/ && ls        
 
       - name: Install Dependencies
         run: npm install
