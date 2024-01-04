@@ -32,16 +32,17 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Navigate To data Folder
-        run: cd data
+        run: cd data/my-website/
+        run: ls
 
       - name: Install Dependencies
         run: npm install
-        working-directory: ./data # Ensure this is the correct path to your project's root with package.json
+        working-directory: ./data/my-website # Ensure this is the correct path to your project's root with package.json
 
 
       - name: Build Project
         run: npm run build
-        working-directory: ./data # Ensure this is the correct path to your project's root with package.json
+        working-directory: ./data/my-website # Ensure this is the correct path to your project's root with package.json
 
 
       - name: Setup Pages
@@ -50,7 +51,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './data/build' # Change this to the directory where your build output is located
+          path: './data/my-website/build' # Change this to the directory where your build output is located
 
       - name: Deploy to GitHub Pages
         id: deployment
