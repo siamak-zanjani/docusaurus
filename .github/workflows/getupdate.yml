@@ -32,7 +32,7 @@ jobs:
           cd external-repo
 
           # Checkout the specified version
-          git checkout $VERSION
+          # git checkout $VERSION
 
           # Copy docs to the specific folder in the current repository
           mkdir -p $GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/$VERSION
