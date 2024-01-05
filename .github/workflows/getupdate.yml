@@ -53,8 +53,10 @@ jobs:
             # Check for changes
             git diff --staged --quiet
             HAS_CHANGES=$?
+            
 
             if [ $HAS_CHANGES -ne 0 ]; then
+                echo "Commit and Push changes"
                 # Commit and push the changes if there are any
                 git commit -m "Added docs from $REPO_URI version ${{ github.event.inputs.version }}"
                 git push
