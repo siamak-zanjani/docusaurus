@@ -24,8 +24,8 @@ jobs:
       - name: Clone external repository and copy docs
         run: |
           # Configure git
-          git config --global user.name 'Your Name'
-          git config --global user.email 'your-email@example.com'
+          git config --global user.name 'siamak-zanjani'
+          git config --global user.email 'siamak-zanjani@octasic.com'
 
           # Clone the external repository
           git clone https://$REPO_TOKEN@$REPO_URI external-repo
