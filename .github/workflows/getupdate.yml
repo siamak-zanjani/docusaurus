@@ -57,8 +57,10 @@ jobs:
             echo "Repository Name: $REPO_NAME"
             echo "Version: ${{ github.event.inputs.version }}"
             echo "Full Path: data/my-website/docs/$REPO_NAME/${{ github.event.inputs.version }}"
-            git diff --staged --quiet
-            if [ $? -ne 0 ]; then
+            
+            git diff --staged --quiet || HAS_CHANGES=$?
+
+            if [ -n "${HAS_CHANGES}" ]; then
                 echo "Commit and Push changes"
                 # Commit and push the changes if there are any
                 git commit -m "Added docs from $REPO_URI version ${{ github.event.inputs.version }}"
