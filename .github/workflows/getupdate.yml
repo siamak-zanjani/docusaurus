@@ -24,7 +24,7 @@ jobs:
         - name: Clone external repository and copy docs
           run: |
             # Parse repository name from URI
-            REPO_NAME=$(basename $REPO_URI .git)
+            REPO_NAME=$(basename ${{ github.event.inputs.repo_uri }} .git)
             echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
   
             # Configure git
