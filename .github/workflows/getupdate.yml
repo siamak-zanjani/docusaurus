@@ -13,40 +13,75 @@ on:
         description: 'Version Number'
         required: true
 
+# jobs:
+#   clone-and-copy:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v2
+
+#       - name: Clone external repository and copy docs
+#         run: |
+#           # Configure git
+#           git config --global user.name 'siamak-zanjani'
+#           git config --global user.email 'siamak-zanjani@octasic.com'
+
+#           # Clone the external repository
+#           git clone https://$REPO_TOKEN@$REPO_URI external-repo
+#           cd external-repo
+
+#           # Copy docs to the specific folder in the current repository
+#           mkdir -p $GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/$VERSION
+#           cp -r docs/* $GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/$VERSION
+
+#           # Navigate back to the workspace
+#           cd $GITHUB_WORKSPACE
+
+#           # Commit and push the changes
+#           git add data/my-website/docs/$REPO_NAME/$VERSION
+#           git commit -m "Added docs from $REPO_URI version $VERSION"
+#           git push
+#         env:
+#           REPO_URI: ${{ github.event.inputs.repo_uri }}
+#           REPO_TOKEN: ${{ github.event.inputs.token }}
+#           VERSION: ${{ github.event.inputs.version }}
+#           REPO_NAME: $(basename $REPO_URI .git)
 jobs:
-  clone-and-copy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Clone external repository and copy docs
-        run: |
-          # Configure git
-          git config --global user.name 'siamak-zanjani'
-          git config --global user.email 'siamak-zanjani@octasic.com'
-
-          # Clone the external repository
-          git clone https://$REPO_TOKEN@$REPO_URI external-repo
-          cd external-repo
-
-          # Checkout the specified version
-          # git checkout $VERSION
-
-          # Copy docs to the specific folder in the current repository
-          mkdir -p $GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/$VERSION
-          cp -r docs/* $GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/$VERSION
-
-          # Navigate back to the workspace
-          cd $GITHUB_WORKSPACE
-
-          # Commit and push the changes
-          git add data/my-website/docs/$REPO_NAME/$VERSION
-          git commit -m "Added docs from $REPO_URI version $VERSION"
-          git push
-        env:
-          REPO_URI: ${{ github.event.inputs.repo_uri }}
-          REPO_TOKEN: ${{ github.event.inputs.token }}
-          VERSION: ${{ github.event.inputs.version }}
-          REPO_NAME: $(basename $REPO_URI .git)
+    clone-and-copy:
+      runs-on: ubuntu-latest
+  
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v2
+  
+        - name: Clone external repository and copy docs
+          run: |
+            # Parse repository name from URI
+            REPO_NAME=$(basename $REPO_URI .git)
+            echo "REPO_NAME=$REPO_NAME" >> $GITHUB_ENV
+  
+            # Configure git
+            git config --global user.name 'siamak-zanjani'
+            git config --global user.email 'siamak-zanjani@octasic.com'
+  
+            # Clone the external repository
+            git clone https://${{ github.event.inputs.token }}@$REPO_URI external-repo
+            cd external-repo
+  
+            # Copy docs to the specific folder in the current repository
+            mkdir -p $GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/${{ github.event.inputs.version }}
+            cp -r docs/* $GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/${{ github.event.inputs.version }}
+  
+            # Navigate back to the workspace
+            cd $GITHUB_WORKSPACE
+  
+            # Commit and push the changes
+            git add data/my-website/docs/$REPO_NAME/${{ github.event.inputs.version }}
+            git commit -m "Added docs from $REPO_URI version ${{ github.event.inputs.version }}"
+            git push
+          env:
+            REPO_URI: ${{ github.event.inputs.repo_uri }}
+            REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Assuming you are using the GitHub token
+            VERSION: ${{ github.event.inputs.version }}
+  
