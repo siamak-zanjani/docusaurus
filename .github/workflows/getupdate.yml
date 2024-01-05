@@ -35,10 +35,6 @@ jobs:
             git clone https://${{ github.event.inputs.token }}@$REPO_URI external-repo
             cd external-repo
   
-            # # Copy docs to the specific folder in the current repository
-            # mkdir -p $GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/${{ github.event.inputs.version }}
-            # cp -r docs/* $GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/${{ github.event.inputs.version }}
-
             # Copy docs to the specific folder in the current repository
             VERSION_FOLDER=$GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/${{ github.event.inputs.version }}
             mkdir -p $VERSION_FOLDER
@@ -51,10 +47,20 @@ jobs:
             # Navigate back to the workspace
             cd $GITHUB_WORKSPACE
   
-            # Commit and push the changes
+            # Add changes
             git add data/my-website/docs/$REPO_NAME/${{ github.event.inputs.version }}
-            git commit -m "Added docs from $REPO_URI version ${{ github.event.inputs.version }}"
-            git push
+
+            # Check for changes
+            git diff --staged --quiet
+            HAS_CHANGES=$?
+
+            if [ $HAS_CHANGES -ne 0 ]; then
+                # Commit and push the changes if there are any
+                git commit -m "Added docs from $REPO_URI version ${{ github.event.inputs.version }}"
+                git push
+            else
+                echo "No changes to commit."
+            fi
           env:
             REPO_URI: ${{ github.event.inputs.repo_uri }}
             REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Assuming you are using the GitHub token
