@@ -13,40 +13,6 @@ on:
         description: 'Version Number'
         required: true
 
-# jobs:
-#   clone-and-copy:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#       - name: Checkout repository
-#         uses: actions/checkout@v2
-
-#       - name: Clone external repository and copy docs
-#         run: |
-#           # Configure git
-#           git config --global user.name 'siamak-zanjani'
-#           git config --global user.email 'siamak-zanjani@octasic.com'
-
-#           # Clone the external repository
-#           git clone https://$REPO_TOKEN@$REPO_URI external-repo
-#           cd external-repo
-
-#           # Copy docs to the specific folder in the current repository
-#           mkdir -p $GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/$VERSION
-#           cp -r docs/* $GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/$VERSION
-
-#           # Navigate back to the workspace
-#           cd $GITHUB_WORKSPACE
-
-#           # Commit and push the changes
-#           git add data/my-website/docs/$REPO_NAME/$VERSION
-#           git commit -m "Added docs from $REPO_URI version $VERSION"
-#           git push
-#         env:
-#           REPO_URI: ${{ github.event.inputs.repo_uri }}
-#           REPO_TOKEN: ${{ github.event.inputs.token }}
-#           VERSION: ${{ github.event.inputs.version }}
-#           REPO_NAME: $(basename $REPO_URI .git)
 jobs:
     clone-and-copy:
       runs-on: ubuntu-latest
@@ -84,4 +50,41 @@ jobs:
             REPO_URI: ${{ github.event.inputs.repo_uri }}
             REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Assuming you are using the GitHub token
             VERSION: ${{ github.event.inputs.version }}
-  
+    build-and-deploy:
+      runs-on: ubuntu-latest
+      container:
+          image: node:latest
+    
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v4
+    
+        - name: Navigate To data Folder
+          run: cd data/my-website/ && ls        
+    
+        - name: Install Dependencies
+          run: npm install
+          working-directory: ./data/my-website # Ensure this is the correct path to your project's root with package.json
+    
+    
+        - name: Build Project
+          run: npm run build
+          working-directory: ./data/my-website # Ensure this is the correct path to your project's root with package.json
+    
+    
+        - name: Setup Pages
+          uses: actions/configure-pages@v4
+    
+        - name: Upload artifact
+          uses: actions/upload-pages-artifact@v3
+          with:
+              path: './data/my-website/build' # Change this to the directory where your build output is located
+    
+        - name: Deploy to GitHub Pages
+          id: deployment
+          uses: actions/deploy-pages@v4
+    
+        # This step will output the URL where your site has been deployed
+        - name: Check deployment URL
+          run: echo "Deployed to ${{ steps.deployment.outputs.page_url }}"
+    
