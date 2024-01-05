@@ -54,15 +54,11 @@ jobs:
             git add data/my-website/docs/$REPO_NAME/${{ github.event.inputs.version }}/* || echo "No changes to add"
             
                        
-            # Check for changes
-            git diff --staged --quiet
-            HAS_CHANGES=$?
-            
             echo "Repository Name: $REPO_NAME"
             echo "Version: ${{ github.event.inputs.version }}"
             echo "Full Path: data/my-website/docs/$REPO_NAME/${{ github.event.inputs.version }}"
-
-            if [ $HAS_CHANGES -ne 0 ]; then
+            git diff --staged --quiet
+            if [ $? -ne 0 ]; then
                 echo "Commit and Push changes"
                 # Commit and push the changes if there are any
                 git commit -m "Added docs from $REPO_URI version ${{ github.event.inputs.version }}"
