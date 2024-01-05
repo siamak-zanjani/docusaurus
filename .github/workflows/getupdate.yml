@@ -51,6 +51,7 @@ jobs:
             REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Assuming you are using the GitHub token
             VERSION: ${{ github.event.inputs.version }}
     build-and-deploy:
+      needs: clone-and-copy 
       runs-on: ubuntu-latest
       permissions:  # Set the required permissions for this job
         contents: read
