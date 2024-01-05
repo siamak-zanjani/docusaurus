@@ -1,0 +1,52 @@
+name: Clone and Copy Docs
+
+on:
+  workflow_dispatch:
+    inputs:
+      repo_uri:
+        description: 'Repository URI'
+        required: true
+      token:
+        description: 'Access Token'
+        required: true
+      version:
+        description: 'Version Number'
+        required: true
+
+jobs:
+  clone-and-copy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Clone external repository and copy docs
+        run: |
+          # Configure git
+          git config --global user.name 'Your Name'
+          git config --global user.email 'your-email@example.com'
+
+          # Clone the external repository
+          git clone https://$REPO_TOKEN@$REPO_URI external-repo
+          cd external-repo
+
+          # Checkout the specified version
+          git checkout $VERSION
+
+          # Copy docs to the specific folder in the current repository
+          mkdir -p $GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/$VERSION
+          cp -r docs/* $GITHUB_WORKSPACE/data/my-website/docs/$REPO_NAME/$VERSION
+
+          # Navigate back to the workspace
+          cd $GITHUB_WORKSPACE
+
+          # Commit and push the changes
+          git add data/my-website/docs/$REPO_NAME/$VERSION
+          git commit -m "Added docs from $REPO_URI version $VERSION"
+          git push
+        env:
+          REPO_URI: ${{ github.event.inputs.repo_uri }}
+          REPO_TOKEN: ${{ github.event.inputs.token }}
+          VERSION: ${{ github.event.inputs.version }}
+          REPO_NAME: $(basename $REPO_URI .git)
