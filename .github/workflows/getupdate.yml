@@ -69,7 +69,7 @@ jobs:
                 echo "No changes to commit."
             fi
         - name: Trigger Repository Dispatch
-
+          if: success()
           run: |
             # echo ${{ secrets.GITHUB_TOKEN.TOKEN }}
             curl -X POST \
