@@ -93,7 +93,7 @@ jobs:
         - name: Navigate To data Folder
           run: |
             cd data/my-website/ 
-            ls -al docs       
+            ls -al docs/docs/       
     
         - name: Install Dependencies
           run: npm install
