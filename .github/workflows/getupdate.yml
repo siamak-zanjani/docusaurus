@@ -69,13 +69,15 @@ jobs:
                 echo "No changes to commit."
             fi
         - name: Trigger Repository Dispatch
+
           run: |
+            echo ${{ secrets.TOKEN }}
             curl -X POST \
             -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/siamak-zanjani/docusaurus/dispatches \
             -d '{"event_type": "build-and-deploy-trigger"}'
-            # https://api.github.com/repos/$repo/actions/workflows/$workflowFileName/dispatches
+            
           env:
             REPO_URI: ${{ github.event.inputs.repo_uri }}
             REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Assuming you are using the GitHub token
