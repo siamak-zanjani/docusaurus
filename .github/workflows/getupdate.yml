@@ -73,9 +73,9 @@ jobs:
             curl -X POST \
             -H "Authorization: token ${{ secrets.TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
-            https://api.github.com/repos/${{ github.repository }}/dispatches \
+            https://api.github.com/repos/siamak-zanjani/docusaurus/dispatches \
             -d '{"event_type": "build-and-deploy-trigger"}'
-
+            # https://api.github.com/repos/$repo/actions/workflows/$workflowFileName/dispatches
           env:
             REPO_URI: ${{ github.event.inputs.repo_uri }}
             REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Assuming you are using the GitHub token
