@@ -32,7 +32,7 @@ jobs:
             git config --global user.email 'siamak-zanjani@octasic.com'
   
             # Clone the external repository
-            git clone https://${{ github.event.inputs.token }}@$REPO_URI external-repo
+            git clone https://${{ github.event.inputs.token }}@${{ github.event.inputs.repo_uri }} external-repo
             cd external-repo
             ls -al 
   
@@ -63,7 +63,7 @@ jobs:
             if [ -n "${HAS_CHANGES}" ]; then
                 echo "Commit and Push changes"
                 # Commit and push the changes if there are any
-                git commit -m "Added docs from $REPO_URI version ${{ github.event.inputs.version }}"
+                git commit -m "Added docs from ${{ github.event.inputs.repo_uri }} version ${{ github.event.inputs.version }}"
                 git push
             else
                 echo "No changes to commit."
@@ -80,6 +80,7 @@ jobs:
             REPO_URI: ${{ github.event.inputs.repo_uri }}
             REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Assuming you are using the GitHub token
             VERSION: ${{ github.event.inputs.version }}
+
     # build-and-deploy:
     #   needs: clone-and-copy 
     #   runs-on: ubuntu-latest
