@@ -71,9 +71,9 @@ jobs:
         - name: Trigger Repository Dispatch
 
           run: |
-            echo ${{ secrets.TOKEN }}
+            echo ${{ secrets.GITHUB_TOKEN.TOKEN }}
             curl -X POST \
-            -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN.TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
             https://api.github.com/repos/siamak-zanjani/docusaurus/dispatches \
             -d '{"event_type": "build-and-deploy-trigger"}'
